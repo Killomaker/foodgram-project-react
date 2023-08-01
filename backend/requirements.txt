@@ -1,0 +1,9 @@
+Django==3.2.15
+django-colorfield==0.7.2
+django-filter==22.1
+djangorestframework==3.14.0
+djangorestframework-simplejwt==4.8.0
+djoser==2.1.0
+python-dotenv==0.21.0
+django-debug-toolbar==3.2.4
+reportlab==3.6.11
