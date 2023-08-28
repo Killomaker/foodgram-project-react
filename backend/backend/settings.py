@@ -10,7 +10,7 @@ LENGTH_TEXT = 15
 LIST_PER_PAGE = 10
 RECIPES_LIMIT = 2
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 SECRET_KEY = 'rnxv=jp#^25m=z21v-i4@1w^dxpq6#l3h83#$)u6)wt(o^j_db'
@@ -18,7 +18,7 @@ SECRET_KEY = 'rnxv=jp#^25m=z21v-i4@1w^dxpq6#l3h83#$)u6)wt(o^j_db'
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'backend']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -106,6 +106,7 @@ REST_FRAMEWORK = {
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
