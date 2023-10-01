@@ -30,8 +30,7 @@ class CustomUserViewSet(UserViewSet):
         permission_classes=(permissions.IsAuthenticated,)
     )
     def get_me(self, request):
-        """Позволяет пользователю получить подробную информацию о себе
-        и редактировать её."""
+        """Информация о своем профиле"""
         if request.method == 'PATCH':
             serializer = CustomUserSerializer(
                 request.user, data=request.data,

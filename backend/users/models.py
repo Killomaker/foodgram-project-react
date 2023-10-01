@@ -6,8 +6,6 @@ from backend.settings import LENGTH_TEXT
 
 
 class User(AbstractUser):
-    """Класс пользователей."""
-
     email = models.EmailField(
         max_length=254,
         verbose_name='email',
