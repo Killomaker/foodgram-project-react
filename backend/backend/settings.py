@@ -6,8 +6,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-LENGTH_TEXT = 15
-LIST_PER_PAGE = 10
+LENGTH_TEXT = 20
 RECIPES_LIMIT = 2
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -116,6 +115,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'backend_static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+LOAD_DATABASE = os.path.join(BASE_DIR, 'data')
 
 AUTH_USER_MODEL = 'users.User'
 

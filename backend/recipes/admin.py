@@ -1,7 +1,5 @@
 from django.contrib import admin
 
-from backend.settings import LIST_PER_PAGE
-
 from .models import (
     Favorite,
     Ingredient,
@@ -14,7 +12,7 @@ from .models import (
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
-    """Класс настройки раздела тегов."""
+    """Настройка тэгов"""
 
     list_display = (
         'pk',
@@ -24,28 +22,25 @@ class TagAdmin(admin.ModelAdmin):
     )
     empty_value_display = 'значение отсутствует'
     list_filter = ('name',)
-    list_per_page = LIST_PER_PAGE
     search_fields = ('name',)
     prepopulated_fields = {'slug': ('name',)}
 
 
 @admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
-    """Класс настройки раздела ингредиентов."""
+    """Настройка ингридентов"""
 
     list_display = (
         'pk',
         'name',
         'measurement_unit'
     )
-    empty_value_display = 'значение отсутствует'
     list_filter = ('name',)
-    list_per_page = LIST_PER_PAGE
     search_fields = ('name',)
 
 
 class IngredientAmountInline(admin.TabularInline):
-    """Класс, позволяющий добавлять ингредиенты в рецепты."""
+    """Класс добавления ингридиентов"""
 
     model = IngredientAmount
     min_num = 1
@@ -53,7 +48,7 @@ class IngredientAmountInline(admin.TabularInline):
 
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
-    """Класс настройки раздела рецептов."""
+    """Настройка рецптов"""
 
     list_display = (
         'pk',
@@ -71,36 +66,24 @@ class RecipeAdmin(admin.ModelAdmin):
         IngredientAmountInline,
     ]
 
-    empty_value_display = 'значение отсутствует'
     list_editable = ('author',)
     list_filter = ('author', 'name', 'tags')
-    list_per_page = LIST_PER_PAGE
     search_fields = ('author', 'name')
 
     def get_ingredients(self, object):
-        """Получает ингредиент или список ингредиентов рецепта."""
         return '\n'.join(
             (ingredient.name for ingredient in object.ingredients.all())
         )
 
-    get_ingredients.short_description = 'ингредиенты'
-
     def get_tags(self, object):
-        """Получает тег или список тегов рецепта."""
         return '\n'.join((tag.name for tag in object.tags.all()))
 
-    get_tags.short_description = 'теги'
-
     def count_favorite(self, object):
-        """Вычисляет количество добавлений рецепта в избранное."""
         return object.favoriting.count()
-
-    count_favorite.short_description = 'Количество добавлений в избранное'
 
 
 @admin.register(IngredientAmount)
 class IngredientAmountAdmin(admin.ModelAdmin):
-    """Класс настройки соответствия игредиентов и рецептов."""
 
     list_display = (
         'pk',
@@ -108,13 +91,10 @@ class IngredientAmountAdmin(admin.ModelAdmin):
         'amount',
         'recipe'
     )
-    empty_value_display = 'значение отсутствует'
-    list_per_page = LIST_PER_PAGE
 
 
 @admin.register(Favorite)
 class FavoriteAdmin(admin.ModelAdmin):
-    """Класс настройки раздела избранного."""
 
     list_display = (
         'pk',
@@ -122,16 +102,13 @@ class FavoriteAdmin(admin.ModelAdmin):
         'recipe',
     )
 
-    empty_value_display = 'значение отсутствует'
     list_editable = ('user', 'recipe')
     list_filter = ('user',)
     search_fields = ('user',)
-    list_per_page = LIST_PER_PAGE
 
 
 @admin.register(ShoppingCart)
 class ShoppingCartAdmin(admin.ModelAdmin):
-    """Класс настройки раздела рецептов, которые добавлены в список покупок."""
 
     list_display = (
         'pk',
@@ -139,8 +116,6 @@ class ShoppingCartAdmin(admin.ModelAdmin):
         'recipe',
     )
 
-    empty_value_display = 'значение отсутствует'
     list_editable = ('user', 'recipe')
     list_filter = ('user',)
     search_fields = ('user',)
-    list_per_page = LIST_PER_PAGE

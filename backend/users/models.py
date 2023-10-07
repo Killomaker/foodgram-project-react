@@ -57,7 +57,7 @@ class User(AbstractUser):
 
 
 class Subscription(models.Model):
-    """Класс для подписки на авторов контента."""
+    """Класс для подписок."""
 
     subscriber = models.ForeignKey(
         User,

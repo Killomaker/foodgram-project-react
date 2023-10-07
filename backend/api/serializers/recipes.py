@@ -16,7 +16,7 @@ from .users import CustomUserSerializer
 
 
 class TagSerializer(serializers.ModelSerializer):
-    """Сериализатор для модели Tag."""
+    """Сериализатор для Tag."""
 
     class Meta:
         model = Tag
@@ -24,7 +24,7 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class IngredientSerializer(serializers.ModelSerializer):
-    """Сериализатор для модели Ingredient."""
+    """Сериализатор для Ingredient."""
 
     class Meta:
         model = Ingredient
@@ -32,7 +32,7 @@ class IngredientSerializer(serializers.ModelSerializer):
 
 
 class IngredientAmountSerializer(serializers.ModelSerializer):
-    """Сериализатор для модели IngredientAmount."""
+    """Сериализатор для IngredientAmount."""
 
     id = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all())
 
@@ -42,7 +42,7 @@ class IngredientAmountSerializer(serializers.ModelSerializer):
 
 
 class IngredientFullSerializer(serializers.ModelSerializer):
-    """Сериализатор для модели IngredientAmount."""
+    """Сериализатор для IngredientAmount."""
 
     id = serializers.ReadOnlyField(source="ingredient.id")
     name = serializers.ReadOnlyField(source='ingredient.name')
@@ -61,7 +61,7 @@ class IngredientFullSerializer(serializers.ModelSerializer):
 
 
 class RecipeGETSerializer(serializers.ModelSerializer):
-    """Сериализатор объектов класса Recipe при GET запросах."""
+    """Сериализатор для получения объектов Рецепта"""
 
     tags = TagSerializer(many=True, read_only=True)
     author = CustomUserSerializer(read_only=True)
@@ -86,12 +86,12 @@ class RecipeGETSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def get_ingredients(object):
-        """Получает ингредиенты из модели IngredientAmount."""
+
         ingredients = IngredientAmount.objects.filter(recipe=object)
         return IngredientFullSerializer(ingredients, many=True).data
 
     def get_is_favorited(self, object):
-        """Проверяет, добавил ли текущий пользователь рецепт в избанное."""
+        """Проверяем есть ли рецепт в избранных у пользователя"""
         request = self.context.get('request')
         if request is None or request.user.is_anonymous:
             return False
@@ -107,7 +107,7 @@ class RecipeGETSerializer(serializers.ModelSerializer):
 
 
 class RecipeSerializer(serializers.ModelSerializer):
-    """Сериализатор объектов класса Recipe при небезопасных запросах."""
+
     ingredients = IngredientAmountSerializer(many=True)
     image = Base64ImageField(use_url=True, max_length=None)
     author = CustomUserSerializer(read_only=True)
@@ -127,7 +127,7 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     def validate_ingredients(self, ingredients):
         """Проверяем, что рецепт содержит уникальные ингредиенты
-        и их количество не меньше 1."""
+        и их количество не меньше 0."""
         ingredients_data = [
             ingredient.get('id') for ingredient in ingredients
         ]
@@ -136,13 +136,9 @@ class RecipeSerializer(serializers.ModelSerializer):
                 'Ингредиенты рецепта должны быть уникальными'
             )
         for ingredient in ingredients:
-            if int(ingredient.get('amount')) < 1:
+            if int(ingredient.get('amount')) < 0:
                 raise serializers.ValidationError(
-                    'Количество ингредиента не может быть меньше 1'
-                )
-            if int(ingredient.get('amount')) > 100:
-                raise serializers.ValidationError(
-                    'Количество ингредиента не может быть больше 100'
+                    'Количество ингредиента не может быть меньше 0'
                 )
         return ingredients
 
@@ -156,7 +152,7 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def add_ingredients(ingredients_data, recipe):
-        """Добавляет ингредиенты."""
+        """Добавление ингредиента."""
         IngredientAmount.objects.bulk_create([
             IngredientAmount(
                 ingredient=ingredient.get('id'),
@@ -215,7 +211,7 @@ class RecipeShortSerializer(serializers.ModelSerializer):
 
 
 class FavoriteSerializer(serializers.ModelSerializer):
-    """Сериализатор для модели Favorite."""
+    """Сериализатор для Избранное"""
 
     class Meta:
         model = Favorite
@@ -230,7 +226,7 @@ class FavoriteSerializer(serializers.ModelSerializer):
 
 
 class ShoppingCartSerializer(serializers.ModelSerializer):
-    """Сериализатор для модели ShoppingCart."""
+    """Сериализатор для модели Списка покупок."""
 
     class Meta:
         model = ShoppingCart

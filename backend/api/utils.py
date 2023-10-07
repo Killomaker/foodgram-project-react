@@ -5,7 +5,7 @@ from reportlab.pdfgen import canvas
 
 
 def create_shopping_cart(ingredients_cart):
-    """Функция для формирования списка покупок."""
+    """Функция для создания файла списка покупок"""
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = (
         "attachment; filename='shopping_cart.pdf'"

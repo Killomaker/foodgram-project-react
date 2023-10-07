@@ -8,7 +8,7 @@ from users.models import Subscription, User
 
 
 class CustomUserCreateSerializer(UserCreateSerializer):
-    """Сериализатор для создания объекта класса User."""
+    """Сериализатор для создания пользователя"""
 
     class Meta:
         model = User
@@ -20,15 +20,9 @@ class CustomUserCreateSerializer(UserCreateSerializer):
             'last_name',
             'password'
         )
-        extra_kwargs = {"password": {"write_only": True}}
 
     def validate(self, data):
-        """Запрещает пользователям присваивать себе username me
-        и использовать повторные username и email."""
-        if data.get('username') == 'me':
-            raise serializers.ValidationError(
-                'Использовать имя me запрещено'
-            )
+        """Валидация юзернейма и имейла"""
         if User.objects.filter(username=data.get('username')):
             raise serializers.ValidationError(
                 'Пользователь с таким username уже существует'
@@ -41,7 +35,7 @@ class CustomUserCreateSerializer(UserCreateSerializer):
 
 
 class CustomUserSerializer(UserSerializer):
-    """Сериализатор для модели User."""
+    """Сериализатор для пользователей."""
 
     is_subscribed = serializers.SerializerMethodField(read_only=True)
 
@@ -56,15 +50,8 @@ class CustomUserSerializer(UserSerializer):
             'is_subscribed'
         )
 
-    def validate(self, data):
-        """Запрещает пользователям изменять себе username на me."""
-        if data.get('username') == 'me':
-            raise serializers.ValidationError(
-                'Использовать имя me запрещено'
-            )
-
     def get_is_subscribed(self, object):
-        """Проверяет, подписан ли текущий пользователь на автора аккаунта."""
+        """Проверяет наличие подписки на автора"""
         request = self.context.get('request')
         if request is None or request.user.is_anonymous:
             return False
@@ -72,7 +59,7 @@ class CustomUserSerializer(UserSerializer):
 
 
 class SubscriptionSerializer(serializers.ModelSerializer):
-    """Сериализатор для модели Subscription."""
+    """Сериализатор для Подписок"""
 
     class Meta:
         model = Subscription
@@ -81,7 +68,6 @@ class SubscriptionSerializer(serializers.ModelSerializer):
             UniqueTogetherValidator(
                 queryset=Subscription.objects.all(),
                 fields=('author', 'subscriber'),
-                message='Вы уже подписывались на этого автора'
             )
         ]
 
@@ -89,13 +75,13 @@ class SubscriptionSerializer(serializers.ModelSerializer):
         """Проверяем, что пользователь не подписывается на самого себя."""
         if data['subscriber'] == data['author']:
             raise serializers.ValidationError(
-                'Подписка на cамого себя не имеет смысла'
+                'Подписаться на себя невозможно'
             )
         return data
 
 
 class SubscriptionRecipeShortSerializer(serializers.ModelSerializer):
-    """Сериализатор для отображения рецептов в подписке."""
+    """Отображение рецептов при просмотре подписок"""
 
     class Meta:
         model = Recipe

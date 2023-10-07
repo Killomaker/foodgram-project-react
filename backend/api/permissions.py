@@ -2,9 +2,7 @@ from rest_framework import permissions
 
 
 class AnonimOrAuthenticatedReadOnly(permissions.BasePermission):
-    """Разрешает анонимному или авторизованному пользователю
-    только безопасные запросы."""
-
+    
     def has_object_permission(self, request, view, object):
         return (
             (request.method in permissions.SAFE_METHODS
@@ -16,9 +14,6 @@ class AnonimOrAuthenticatedReadOnly(permissions.BasePermission):
 
 
 class AuthorOrReadOnly(permissions.BasePermission):
-    """Предоставляет права на осуществление опасных методов запроса
-    только автору объекта, в остальных случаях
-    доступ запрещен."""
 
     def has_object_permission(self, request, view, object):
         return (

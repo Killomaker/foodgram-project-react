@@ -14,7 +14,7 @@ class Tag(models.Model):
     """Класс тегов."""
 
     name = models.CharField(
-        max_length=50,
+        max_length=25,
         verbose_name='Hазвание',
         unique=True,
         db_index=True
@@ -54,7 +54,7 @@ class Ingredient(models.Model):
         db_index=True
     )
     measurement_unit = models.CharField(
-        max_length=10,
+        max_length=5,
         verbose_name='единица измерения'
     )
 
@@ -93,11 +93,11 @@ class Recipe(models.Model):
     )
     text = models.TextField(verbose_name='описание')
     cooking_time = models.PositiveSmallIntegerField(
-        verbose_name='время приготовления (в минутах)',
+        verbose_name='время приготовления(мин.)',
         validators=[
             MinValueValidator(
-                1,
-                message='Время приготовления не может быть меньше 1'
+                0,
+                message='Время приготовления не может быть меньше 0'
             ),
         ],
     )
@@ -123,8 +123,7 @@ class Recipe(models.Model):
 
 
 class IngredientAmount(models.Model):
-    """Вспомогательный класс, связывающий рецепты и ингредиенты.
-    Доступно указание количества ингредиента."""
+    """Вспомогательный класс, связывающий рецепты и ингредиенты."""
 
     ingredient = models.ForeignKey(
         Ingredient,
@@ -166,7 +165,7 @@ class IngredientAmount(models.Model):
 
 
 class Favorite(models.Model):
-    """Класс для добавления рецептов в избранное."""
+    """Довавление рецептов в избранное."""
 
     recipe = models.ForeignKey(
         Recipe,

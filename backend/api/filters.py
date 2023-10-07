@@ -20,7 +20,7 @@ class RecipeFilter(filters.FilterSet):
     is_in_shopping_cart = filters.BooleanFilter(
         method='get_is_in_shopping_cart'
     )
-    author = filters.AllValuesMultipleFilter(field_name='author__username')
+    author = filters.AllValuesMultipleFilter(field_name='author_id')
 
     class Meta:
         model = Recipe
@@ -34,4 +34,9 @@ class RecipeFilter(filters.FilterSet):
     def get_is_in_shopping_cart(self, queryset, name, value):
         if value:
             return queryset.filter(shopping_cart__user=self.request.user)
-        return queryse
+        return queryset
+    
+    def get_author_recipes(self, queryset, name, value):
+        if value:
+            return queryset.filter(author__user=self.request.user)
+        return queryset
