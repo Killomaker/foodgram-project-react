@@ -35,7 +35,7 @@ class RecipeFilter(filters.FilterSet):
         if value:
             return queryset.filter(shopping_cart__user=self.request.user)
         return queryset
-    
+
     def get_author_recipes(self, queryset, name, value):
         if value:
             return queryset.filter(author__user=self.request.user)
