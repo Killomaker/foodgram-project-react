@@ -84,7 +84,7 @@ class Subscription(models.Model):
                 name='unique_subscription'
             ),
         )
-    
+
     def validate(self, data):
         """Проверяем, что пользователь не подписывается на самого себя."""
         if data['subscriber'] == data['author']:
