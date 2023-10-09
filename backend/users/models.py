@@ -2,6 +2,8 @@ from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
 from django.db import models
 
+from rest_framework import serializers
+
 from backend.settings import LENGTH_TEXT
 
 
@@ -50,7 +52,7 @@ class User(AbstractUser):
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
-        ordering = ('id',)
+        ordering = ('username',)
 
     def __str__(self):
         return self.username[:LENGTH_TEXT]
@@ -75,13 +77,21 @@ class Subscription(models.Model):
     class Meta:
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
-        ordering = ('id',)
+        ordering = ('username',)
         constraints = (
             models.UniqueConstraint(
                 fields=['author', 'subscriber'],
                 name='unique_subscription'
             ),
         )
+    
+    def validate(self, data):
+        """Проверяем, что пользователь не подписывается на самого себя."""
+        if data['subscriber'] == data['author']:
+            raise serializers.ValidationError(
+                'Подписаться на себя невозможно'
+            )
+        return data
 
     def __str__(self):
         return f'{self.subscriber} подписан на: {self.author}'

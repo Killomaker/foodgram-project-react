@@ -12,10 +12,10 @@ RECIPES_LIMIT = 2
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-SECRET_KEY = 'rnxv=jp#^25m=z21v-i4@1w^dxpq6#l3h83#$)u6)wt(o^j_db'
+SECRET_KEY = os.getenv('SECRET_KEY', 'default_key')
 
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'backend']
 
@@ -70,8 +70,6 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        # Меняем настройку Django: теперь для работы будет использоваться
-        # бэкенд postgresql
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv('POSTGRES_DB', 'django'),
         'USER': os.getenv('POSTGRES_USER', 'django'),
@@ -122,7 +120,7 @@ AUTH_USER_MODEL = 'users.User'
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 

@@ -14,7 +14,7 @@ class Tag(models.Model):
     """Класс тегов."""
 
     name = models.CharField(
-        max_length=25,
+        max_length=50,
         verbose_name='Hазвание',
         unique=True,
         db_index=True
@@ -99,6 +99,10 @@ class Recipe(models.Model):
                 0,
                 message='Время приготовления не может быть меньше 0'
             ),
+            MaxValueValidator(
+                1000,
+                message='Количество ингредиента не может быть больше 1000'
+            )
         ],
     )
     author = models.ForeignKey(

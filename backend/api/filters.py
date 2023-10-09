@@ -20,7 +20,6 @@ class RecipeFilter(filters.FilterSet):
     is_in_shopping_cart = filters.BooleanFilter(
         method='get_is_in_shopping_cart'
     )
-    author = filters.AllValuesMultipleFilter(field_name='author_id')
 
     class Meta:
         model = Recipe

@@ -20,7 +20,7 @@ class TagSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Tag
-        fields = '__all__'
+        fields = ('name', 'color', 'slug')
 
 
 class IngredientSerializer(serializers.ModelSerializer):
@@ -140,6 +140,10 @@ class RecipeSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError(
                     'Количество ингредиента не может быть меньше 0'
                 )
+        if len(ingredients_data) < 1:
+            raise serializers.ValidationError(
+                'Ингридиентоов должно быть больше чем 0'
+            )
         return ingredients
 
     def validate_tags(self, tags):
@@ -175,12 +179,6 @@ class RecipeSerializer(serializers.ModelSerializer):
     @transaction.atomic
     def update(self, instance, validated_data):
         recipe = instance
-        instance.image = validated_data.get('image', instance.image)
-        instance.name = validated_data.get('name', instance.name)
-        instance.text = validated_data.get('text', instance.name)
-        instance.cooking_time = validated_data.get(
-            'cooking_time', instance.cooking_time
-        )
         instance.tags.clear()
         instance.ingredients.clear()
         tags_data = validated_data.get('tags')
@@ -189,7 +187,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         IngredientAmount.objects.filter(recipe=recipe).delete()
         self.add_ingredients(ingredients_data, recipe)
         instance.save()
-        return instance
+        return super().update(instance, validated_data)
 
     def to_representation(self, recipe):
         """Определяет какой сериализатор будет использоваться для чтения."""
