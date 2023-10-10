@@ -195,6 +195,7 @@ class FavoriteAndShoppingCartAbstractModel(models.Model):
     class Meta:
         abstract = True
 
+
 class Favorite(FavoriteAndShoppingCartAbstractModel):
     """Довавление рецептов в избранное."""
 

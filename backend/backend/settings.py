@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 LENGTH_TEXT = 20
-TEXT_LENGTH_150=150
+TEXT_LENGTH_150 = 150
 RECIPES_LIMIT = 2
 
 BASE_DIR = Path(__file__).resolve().parent.parent
