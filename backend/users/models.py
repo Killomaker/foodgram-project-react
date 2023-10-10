@@ -2,7 +2,6 @@ from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
 from django.db import models
 
-from rest_framework import serializers
 from backend.settings import LENGTH_TEXT, TEXT_LENGTH_150
 
 
@@ -51,7 +50,6 @@ class User(AbstractUser):
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
-        ordering = ('id',)
 
     def __str__(self):
         return self.username[:LENGTH_TEXT]
@@ -76,7 +74,6 @@ class Subscription(models.Model):
     class Meta:
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
-        ordering = ('id',)
         constraints = (
             models.UniqueConstraint(
                 fields=['author', 'subscriber'],

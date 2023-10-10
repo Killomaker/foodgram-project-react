@@ -8,7 +8,7 @@ from django.db import models
 
 from rest_framework import serializers
 
-from backend.settings import LENGTH_TEXT
+from backend.settings import LENGTH_TEXT, TEXT_LENGTH_150
 from users.models import User
 
 
@@ -51,7 +51,7 @@ class Ingredient(models.Model):
     """Класс ингредиентов."""
 
     name = models.CharField(
-        max_length=150,
+        max_length=TEXT_LENGTH_150,
         verbose_name='Hазвание',
         db_index=True
     )
@@ -168,7 +168,6 @@ class IngredientAmount(models.Model):
     class Meta:
         verbose_name = 'Соответствие ингредиента и рецепта'
         verbose_name_plural = 'Таблица соответствия ингредиентов и рецептов'
-        ordering = ('id',)
         constraints = (
             models.UniqueConstraint(
                 fields=['recipe', 'ingredient'],
