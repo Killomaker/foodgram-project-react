@@ -6,6 +6,8 @@ from django.core.validators import (
 )
 from django.db import models
 
+from rest_framework import serializers
+
 from backend.settings import LENGTH_TEXT
 from users.models import User
 
@@ -57,6 +59,16 @@ class Ingredient(models.Model):
         max_length=5,
         verbose_name='единица измерения'
     )
+
+    def validate_ingredients(self, ingredients):
+        """Проверяем, что рецепт содержит уникальные ингредиенты"""
+        ingredients_data = [
+            ingredient.get('id') for ingredient in ingredients
+        ]
+        if len(ingredients_data) != len(set(ingredients_data)):
+            raise serializers.ValidationError(
+                'Ингредиенты рецепта должны быть уникальными'
+            )
 
     class Meta:
         verbose_name = 'Ингредиент'
@@ -168,26 +180,37 @@ class IngredientAmount(models.Model):
         return f'{self.recipe} содержит ингредиент/ты {self.ingredient}'
 
 
-class Favorite(models.Model):
-    """Довавление рецептов в избранное."""
+class FavoriteAndShoppingCartAbstractModel(models.Model):
 
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name='favoriting',
         verbose_name='рецепт'
     )
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='favoriting',
         verbose_name='Пользователь'
+    )
+
+    class Meta:
+        abstract = True
+
+class Favorite(FavoriteAndShoppingCartAbstractModel):
+    """Довавление рецептов в избранное."""
+
+    recipe = models.ForeignKey(
+        Recipe,
+        related_name='favoriting',
+    )
+    user = models.ForeignKey(
+        User,
+        related_name='favoriting',
     )
 
     class Meta:
         verbose_name = 'Избранное'
         verbose_name_plural = 'Избранное'
-        ordering = ('id',)
         constraints = (
             models.UniqueConstraint(
                 fields=['user', 'recipe'],
@@ -199,14 +222,12 @@ class Favorite(models.Model):
         return f'{self.recipe} в избранном у {self.user}'
 
 
-class ShoppingCart(models.Model):
+class ShoppingCart(FavoriteAndShoppingCartAbstractModel):
     """Класс для составления списка покупок."""
 
     recipe = models.ForeignKey(
         Recipe,
-        on_delete=models.CASCADE,
         related_name='shopping_cart',
-        verbose_name='рецепт'
     )
     user = models.ForeignKey(
         User,

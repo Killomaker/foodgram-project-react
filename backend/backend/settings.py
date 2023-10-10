@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 LENGTH_TEXT = 20
+TEXT_LENGTH_150=150
 RECIPES_LIMIT = 2
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -118,7 +119,7 @@ LOAD_DATABASE = os.path.join(BASE_DIR, 'data')
 
 AUTH_USER_MODEL = 'users.User'
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru-ru'
 
 TIME_ZONE = 'Europe/Moscow'
 

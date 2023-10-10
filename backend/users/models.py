@@ -3,8 +3,7 @@ from django.core.validators import RegexValidator
 from django.db import models
 
 from rest_framework import serializers
-
-from backend.settings import LENGTH_TEXT
+from backend.settings import LENGTH_TEXT, TEXT_LENGTH_150
 
 
 class User(AbstractUser):
@@ -15,7 +14,7 @@ class User(AbstractUser):
         db_index=True
     )
     username = models.CharField(
-        max_length=150,
+        max_length=TEXT_LENGTH_150,
         verbose_name='Имя пользователя',
         unique=True,
         db_index=True,
@@ -25,15 +24,15 @@ class User(AbstractUser):
         )]
     )
     first_name = models.CharField(
-        max_length=150,
+        max_length=TEXT_LENGTH_150,
         verbose_name='имя'
     )
     last_name = models.CharField(
-        max_length=150,
+        max_length=TEXT_LENGTH_150,
         verbose_name='фамилия'
     )
     password = models.CharField(
-        max_length=150,
+        max_length=TEXT_LENGTH_150,
         verbose_name='пароль'
     )
     is_admin = models.BooleanField(
@@ -52,7 +51,7 @@ class User(AbstractUser):
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
-        ordering = ('username',)
+        ordering = ('id',)
 
     def __str__(self):
         return self.username[:LENGTH_TEXT]
@@ -77,21 +76,17 @@ class Subscription(models.Model):
     class Meta:
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
-        ordering = ('username',)
+        ordering = ('id',)
         constraints = (
             models.UniqueConstraint(
                 fields=['author', 'subscriber'],
                 name='unique_subscription'
             ),
+            models.CheckConstraint(
+                name="%(app_label)s_%(class)s_prevent_self_follow",
+                check=~models.Q(from_user=models.F("to_user")),
+            ),
         )
-
-    def validate(self, data):
-        """Проверяем, что пользователь не подписывается на самого себя."""
-        if data['subscriber'] == data['author']:
-            raise serializers.ValidationError(
-                'Подписаться на себя невозможно'
-            )
-        return data
 
     def __str__(self):
         return f'{self.subscriber} подписан на: {self.author}'
