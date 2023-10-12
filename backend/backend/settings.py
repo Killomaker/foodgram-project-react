@@ -9,6 +9,9 @@ load_dotenv()
 LENGTH_TEXT = 20
 TEXT_LENGTH_150 = 150
 RECIPES_LIMIT = 2
+TEXT_LENGTH_50 = 50
+TEXT_LENGTH_200 = 200
+TEXT_LENGTH_254 = 254
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 

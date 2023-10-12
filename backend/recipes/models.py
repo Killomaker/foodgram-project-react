@@ -5,10 +5,13 @@ from django.core.validators import (
     RegexValidator
 )
 from django.db import models
-
 from rest_framework import serializers
 
-from backend.settings import LENGTH_TEXT, TEXT_LENGTH_150
+from backend.settings import (LENGTH_TEXT,
+                              TEXT_LENGTH_150,
+                              TEXT_LENGTH_50,
+                              TEXT_LENGTH_200
+) 
 from users.models import User
 
 
@@ -16,7 +19,7 @@ class Tag(models.Model):
     """Класс тегов."""
 
     name = models.CharField(
-        max_length=50,
+        max_length=TEXT_LENGTH_50,
         verbose_name='Hазвание',
         unique=True,
         db_index=True
@@ -29,7 +32,7 @@ class Tag(models.Model):
         unique=True
     )
     slug = models.SlugField(
-        max_length=50,
+        max_length=TEXT_LENGTH_50,
         verbose_name='slug',
         unique=True,
         validators=[RegexValidator(
@@ -60,16 +63,6 @@ class Ingredient(models.Model):
         verbose_name='единица измерения'
     )
 
-    def validate_ingredients(self, ingredients):
-        """Проверяем, что рецепт содержит уникальные ингредиенты"""
-        ingredients_data = [
-            ingredient.get('id') for ingredient in ingredients
-        ]
-        if len(ingredients_data) != len(set(ingredients_data)):
-            raise serializers.ValidationError(
-                'Ингредиенты рецепта должны быть уникальными'
-            )
-
     class Meta:
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
@@ -99,7 +92,7 @@ class Recipe(models.Model):
         verbose_name='изображение'
     )
     name = models.CharField(
-        max_length=200,
+        max_length=TEXT_LENGTH_200,
         verbose_name='Hазвание',
         db_index=True
     )

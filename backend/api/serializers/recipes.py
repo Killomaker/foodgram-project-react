@@ -1,3 +1,5 @@
+import re
+
 from django.db import transaction
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
@@ -28,7 +30,7 @@ class IngredientSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ingredient
-        fields = '__all__'
+        fields = ('name', 'measurement_unit')
 
 
 class IngredientAmountSerializer(serializers.ModelSerializer):
@@ -124,7 +126,12 @@ class RecipeSerializer(serializers.ModelSerializer):
             'cooking_time',
             'author'
         )
-
+    def validate_recipe(self, recipe):
+        name = recipe.get('name')
+        if not re.match('[а-яА-ЯёЁa-zA-Z0-9]', name):
+            raise serializers.ValidationError(
+                'Имя рецепта должно содержать буквы'
+            )
     def validate_ingredients(self, ingredients):
         """Проверяем, что рецепт содержит уникальные ингредиенты
         и их количество не меньше 0."""
@@ -213,7 +220,7 @@ class FavoriteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Favorite
-        fields = '__all__'
+        fields = ('recipe','user')
         validators = [
             UniqueTogetherValidator(
                 queryset=Favorite.objects.all(),
