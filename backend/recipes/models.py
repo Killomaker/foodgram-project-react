@@ -5,13 +5,13 @@ from django.core.validators import (
     RegexValidator
 )
 from django.db import models
-from rest_framework import serializers
 
-from backend.settings import (LENGTH_TEXT,
-                              TEXT_LENGTH_150,
-                              TEXT_LENGTH_50,
-                              TEXT_LENGTH_200
-) 
+from backend.settings import (
+    LENGTH_TEXT,
+    TEXT_LENGTH_150,
+    TEXT_LENGTH_50,
+    TEXT_LENGTH_200
+)
 from users.models import User
 
 

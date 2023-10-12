@@ -2,11 +2,12 @@ from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
 from django.db import models
 
-from backend.settings import(
+from backend.settings import (
     LENGTH_TEXT,
     TEXT_LENGTH_150,
     TEXT_LENGTH_254
 )
+
 
 class User(AbstractUser):
     email = models.EmailField(
