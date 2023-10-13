@@ -192,15 +192,6 @@ class FavoriteAndShoppingCartAbstractModel(models.Model):
 class Favorite(FavoriteAndShoppingCartAbstractModel):
     """Довавление рецептов в избранное."""
 
-    recipe = models.ForeignKey(
-        Recipe,
-        related_name='favoriting',
-    )
-    user = models.ForeignKey(
-        User,
-        related_name='favoriting',
-    )
-
     class Meta:
         verbose_name = 'Избранное'
         verbose_name_plural = 'Избранное'
@@ -217,17 +208,6 @@ class Favorite(FavoriteAndShoppingCartAbstractModel):
 
 class ShoppingCart(FavoriteAndShoppingCartAbstractModel):
     """Класс для составления списка покупок."""
-
-    recipe = models.ForeignKey(
-        Recipe,
-        related_name='shopping_cart',
-    )
-    user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='shopping_cart',
-        verbose_name='Пользователь'
-    )
 
     class Meta:
         verbose_name = 'Рецепт пользователя для списка покупок'

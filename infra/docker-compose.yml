@@ -19,7 +19,7 @@ services:
   # Имя и описание контейнера с бэкендом
   backend:
     # Из какого Dockerfile собирать образ для этого контейнера:
-    build: ../backend/
+    image: killomaker/foodgram_backend:latest
     volumes:
       - static:/app/static/
       - media:/app/media/
@@ -28,9 +28,7 @@ services:
     depends_on:
       - db
   frontend:
-    build:
-      context: ../frontend
-      dockerfile: Dockerfile
+    image: killomaker/foodgram_frontend:latest
     volumes:
       - ../frontend/:/app/result_build/
   nginx:

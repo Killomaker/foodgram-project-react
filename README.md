@@ -8,3 +8,5 @@ source Scripts/venv/activate
 2) загрузить базу данных: python manage.py ingr_load
 python manage.py ingr_load
 3) перейти в папку infra и написать docker compose up
+
+recipesforall.ddns.net
