@@ -83,10 +83,6 @@ class Subscription(models.Model):
                 fields=['author', 'subscriber'],
                 name='unique_subscription'
             ),
-            models.CheckConstraint(
-                name="%(app_label)s_%(class)s_prevent_self_follow",
-                check=~models.Q(from_user=models.F("to_user")),
-            ),
         )
 
     def __str__(self):
